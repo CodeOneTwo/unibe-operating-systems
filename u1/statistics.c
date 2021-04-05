@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 	}
 
 	if (checkArguments(argc, argv) == 0) {
-		printf("You should only enter integers!\n");
+		printf("Arguments must be integers\n");
 		return 0;
 	}
 
