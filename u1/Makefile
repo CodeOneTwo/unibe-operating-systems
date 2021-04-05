@@ -20,7 +20,7 @@ $(PROGS):
 zip: u1.zip
 
 u1.zip: all
-	zip u1.zip $(SOURCES) Makefile
+	zip u1.zip $(SOURCES) Makefile README.md
 
 # zombies: # compiles zombie process
 # 	gcc -Wall -std=c99 ./zombies.c -o zombies
