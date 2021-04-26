@@ -1,0 +1,16 @@
+Jan Dietrich - 10-100-436
+
+# A)
+
+the variable that is affected:
+
+`available_resources`
+
+It is a variable that is shared between both threads, that means both threads will read and write to it. If both threads read the value at a certain time (lets assume at the same time) and do computation with it and write it back. The first write gets lost because the second overwrites it. ->race condition
+
+# B)
+
+On the line 22 happens a comparison with the variable `available_resources`
+and on line 25 a new value is written to `available_resources`
+
+Similarly on line 34 and 37 happens another comparison and updating of `available_resources`
