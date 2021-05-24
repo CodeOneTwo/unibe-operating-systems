@@ -1,0 +1,100 @@
+# Jan Dietrich - 10-100-436
+
+# a) display inode
+
+the flag `-i` of the command `ls` displays the inode of the files
+
+the command (`-l` for line display)
+```
+ls -li files
+```
+outputs the following (the first number is the inode)
+```
+68632434 -rw-r--r-- 1 jan jan 77 25. Feb 15:29 file1.txt
+68632435 -rw-r--r-- 1 jan jan 37 25. Feb 15:42 file3.txt
+```
+
+# b) hardlink
+
+To create hard- and softlinks the utility tool `ln` is very used
+
+create hard link
+```
+ln file1.txt file2.txt
+```
+
+the output of `ls -li`
+```
+68632434 -rw-r--r-- 2 jan jan 77 25. Feb 15:29 file1.txt
+68632434 -rw-r--r-- 2 jan jan 77 25. Feb 15:29 file2.txt
+68632435 -rw-r--r-- 1 jan jan 37 25. Feb 15:42 file3.txt
+```
+We can see that the inode is the same for `file1.txt` and `file2.txt` this is in line with the definition of a hardlink from the lecture (filesystem)
+
+The content of the file can be displayed with `cat` and compared to each other
+another useful tool is `diff`. Like the name suggests it shows the diffs of files.
+If they are the same no output is displayed
+
+```
+diff file1.txt file2.txt
+```
+-> output is empty (files are the same)
+
+After editing the file `file2.txt` (changing the citee with my name)
+
+The output of the `file1.txt` is
+
+`cat fil1.txt`
+```
+Sol chi non lascia eredità d'affetti poca gioia ha dell'urna.
+- Jan Dietrich
+```
+
+We can see that also the `file1.txt` has changed (`diff file1.txt file2.txt`, -> no output)
+
+# c) remove hardlink
+
+```
+rm file1.txt
+```
+
+because `file2.txt` is a hardlink and a hard link is another directory entry pointing to the same inode (real file on disk) the removing or unlinking `file1.txt` does not allow the system to release/free the data on the disk, because there still exists a reference/hard link/directory entry to it. Therefore the `file2.txt` doesn't get removed
+
+`rm` is the utlity tool to unlink multiple files. `unlink` can also be used to delete a file.
+
+# d) soflink
+
+```
+ln -s file3.txt file4.txt
+```
+
+`ls -li`
+```
+68632434 -rw-r--r-- 2 jan jan 80 24. Mai 14:18 file2.txt
+68632435 -rw-r--r-- 1 jan jan 37 25. Feb 15:42 file3.txt
+68634444 lrwxrwxrwx 1 jan jan  9 24. Mai 14:32 file4.txt -> file3.txt
+```
+
+There is a different inode because a softlink is a new (short) file that contains the filename of the linked file.
+
+# e) edit and delete file with softlink
+
+## edit 
+
+After editing the file `file4.txt` (changing the citee with my name)
+
+the output of `file3.txt` is 
+
+`cat file3.txt`
+```
+Non nobis solum nati sumus.
+
+- Jan Dietrich
+```
+
+We can see that the `file3.txt` changed as well (`diff file3.txt file4.txt`, -> no output)
+
+## delete
+
+The deletion of the file `file3.txt` removes the actual file (since no directory entry points to the inode)
+The softlink that pointed to the filename `file3.txt` does point to nowhere and the softlink became stale.
